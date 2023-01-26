@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -134,5 +136,96 @@ public class GameManager : MonoBehaviour
         var xPosition = Random.Range(1, _mapSize.x - 2);
         var yPosition = Random.Range(1, _mapSize.y - 2);
         return new Vector3Int(xPosition, yPosition, 0);
+    }
+
+    public void OnPlayerPressUp(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+        
+        var movePosition = _playerPosition;
+        movePosition.y++;
+        if (IsPositionBlocked(movePosition))
+        {
+            Debug.Log("Blocked");
+            return;
+        }
+
+        MovePlayer(movePosition);
+    }
+    
+    public void OnPlayerPressDown(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+        
+        var movePosition = _playerPosition;
+        movePosition.y--;
+        if (IsPositionBlocked(movePosition))
+        {
+            Debug.Log("Blocked");
+            return;
+        }
+
+        MovePlayer(movePosition);
+    }
+    
+    public void OnPlayerPressLeft(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+        
+        var movePosition = _playerPosition;
+        movePosition.x--;
+        if (IsPositionBlocked(movePosition))
+        {
+            Debug.Log("Blocked");
+            return;
+        }
+
+        MovePlayer(movePosition);
+    }
+    
+    public void OnPlayerPressRight(InputAction.CallbackContext context)
+    {
+        if (!context.performed)
+        {
+            return;
+        }
+        
+        var movePosition = _playerPosition;
+        movePosition.x++;
+        
+        if (IsPositionBlocked(movePosition))
+        {
+            return;
+        }
+
+        MovePlayer(movePosition);
+    }
+
+    private bool IsPositionBlocked(Vector3Int movePosition)
+    {
+        var tile = _wallsTilemap.GetTile(movePosition);
+        
+        if (tile != null && tile.name.Equals(Wall, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void MovePlayer(Vector3Int movePosition)
+    {
+        _playerTilemap.SetTile(_playerPosition, null);
+        _playerPosition = movePosition;
+        _playerTilemap.SetTile(_playerPosition, _tileDictionary[Player]);
     }
 }
