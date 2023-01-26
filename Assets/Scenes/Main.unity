@@ -515,12 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapSize: {x: 10, y: 10}
-  _tileList:
-  - {fileID: 11400000, guid: 118a1082bf639844cb1ad4378017927d, type: 2}
-  - {fileID: 11400000, guid: f7b8f39cd02018d4d923006c435911fe, type: 2}
-  - {fileID: 11400000, guid: ee8eb801f4380554a82c93e0dc4f9a51, type: 2}
-  - {fileID: 11400000, guid: afef51f1991782b478d6dbe54046d0a1, type: 2}
-  - {fileID: 11400000, guid: a1c88d1091a32f6478c3213043599a77, type: 2}
+  _mazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
   _groundTilemap: {fileID: 1327253938}
   _wallsTilemap: {fileID: 1783388742}
   _doorwayTilemap: {fileID: 1381553571}

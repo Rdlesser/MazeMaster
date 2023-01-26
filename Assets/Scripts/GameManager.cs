@@ -12,13 +12,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Vector2Int _mapSize = new Vector2Int(10, 10);
     // Todo: improve - Make this accept a scriptable object that maps a name to a tile
-    [FormerlySerializedAs("_groundTile")] [SerializeField] private List<TileBase> _tileList;
+    [SerializeField] private MazeTilesList _mazeTilesList;
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private Tilemap _wallsTilemap;
     [SerializeField] private Tilemap _doorwayTilemap;
     [SerializeField] private Tilemap _playerTilemap;
 
     private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
+    
     private Vector3Int _entrancePosition;
     private Vector3Int _exitPosition;
     private Vector3Int _playerPosition;
@@ -39,10 +40,11 @@ public class GameManager : MonoBehaviour
 
     private void PreprocessTiles()
     {
-        foreach (var tile in _tileList)
+        foreach (var tileData in _mazeTilesList.TileDatas)
         {
-            _tileDictionary[tile.name.ToLower()] = tile;
+            _tileDictionary[tileData.Name.ToLower()] = tileData.Tile;
         }
+        
     }
 
     void Start()
