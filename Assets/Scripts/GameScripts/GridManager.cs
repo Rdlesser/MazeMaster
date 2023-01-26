@@ -35,7 +35,15 @@ public class GridManager : MonoBehaviour
         SetGround();
         SetBoundaries();
         SetDoorways();
+        CenterGameOnScreen();
         DispatchInitComplete();
+    }
+
+    private void CenterGameOnScreen()
+    {
+        var sizeX = _mapData.MapSize.x;
+        var sizeY = _mapData.MapSize.y;
+        transform.position = new Vector3(sizeX / -2f, sizeY / -2f, 0);
     }
 
     private void PreprocessTiles()

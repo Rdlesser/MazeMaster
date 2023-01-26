@@ -6,7 +6,8 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField] private MapData _mapData;
-    [FormerlySerializedAs("_mapManager")] [SerializeField] private GridManager _gridManager;
+    [SerializeField] private GridManager _gridManager;
+    [SerializeField] private CameraSizeFitter _cameraFitter;
 
     private bool _isGameInProgress = false;
     
@@ -14,15 +15,26 @@ public class GameManager : MonoBehaviour
     {
         if (_mapData != null)
         {
-            _gridManager.MapInitted += SpawnPlayer;
+            _gridManager.MapInitted += StartGame;
             InitMapManager(_mapData);
+            InitCameraFitter(_mapData);
         }
+    }
+
+    private void StartGame()
+    {
+        SpawnPlayer();
     }
 
     private void InitMapManager(MapData mapData)
     {
         _gridManager.Init(mapData);
         _gridManager.PlayerReachedGoalAction += OnPlayerWon;
+    }
+
+    private void InitCameraFitter(MapData mapData)
+    {
+        _cameraFitter.Init(mapData);
     }
 
     private void SpawnPlayer()
