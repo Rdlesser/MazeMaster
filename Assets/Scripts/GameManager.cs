@@ -1,27 +1,12 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
 
     [SerializeField] private MapData _mapData;
-    [SerializeField] private MapManager _mapManager;
-    [SerializeField] private Tilemap _playerTilemap;
-
-    private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
-    
-    private Vector3Int _entrancePosition;
-    private Vector3Int _exitPosition;
-    private Vector3Int _playerPosition;
-
-
-    private static readonly string Ground = "ground";
-    private static readonly string Wall = "wall";
-    private static readonly string Entrance = "entrance";
-    private static readonly string Exit = "exit";
-    private static readonly string Player = "player";
+    [FormerlySerializedAs("_mapManager")] [SerializeField] private GridManager _gridManager;
 
     private bool _isGameInProgress = false;
     
@@ -29,20 +14,20 @@ public class GameManager : MonoBehaviour
     {
         if (_mapData != null)
         {
-            _mapManager.MapInitted += SpawnPlayer;
+            _gridManager.MapInitted += SpawnPlayer;
             InitMapManager(_mapData);
         }
     }
 
     private void InitMapManager(MapData mapData)
     {
-        _mapManager.Init(mapData);
-        _mapManager.PlayerReachedGoalAction += OnPlayerWon;
+        _gridManager.Init(mapData);
+        _gridManager.PlayerReachedGoalAction += OnPlayerWon;
     }
 
     private void SpawnPlayer()
     {
-        _mapManager.SpawnPlayer();
+        _gridManager.SpawnPlayer();
         _isGameInProgress = true;
     }
     
@@ -53,7 +38,7 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        _mapManager.MovePlayer(Vector3Int.up);
+        _gridManager.MovePlayer(Vector3Int.up);
     }
     
     public void OnPlayerPressDown(InputAction.CallbackContext context)
@@ -63,7 +48,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        _mapManager.MovePlayer(Vector3Int.down);
+        _gridManager.MovePlayer(Vector3Int.down);
     }
     
     public void OnPlayerPressLeft(InputAction.CallbackContext context)
@@ -73,7 +58,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        _mapManager.MovePlayer(Vector3Int.left);
+        _gridManager.MovePlayer(Vector3Int.left);
     }
     
     public void OnPlayerPressRight(InputAction.CallbackContext context)
@@ -83,7 +68,7 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        _mapManager.MovePlayer(Vector3Int.right);
+        _gridManager.MovePlayer(Vector3Int.right);
     }
 
     private void OnPlayerWon()
