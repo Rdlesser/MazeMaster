@@ -514,11 +514,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ff26731955463249acb603f3984dc52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mapSize: {x: 10, y: 10}
-  _mazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
-  _groundTilemap: {fileID: 1327253938}
-  _wallsTilemap: {fileID: 1783388742}
-  _doorwayTilemap: {fileID: 1381553571}
+  _mapData:
+    MapSize: {x: 8, y: 8}
+    MazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
+  _mapManager: {fileID: 1673731655}
   _playerTilemap: {fileID: 2066015327}
 --- !u!114 &1429496756
 MonoBehaviour:
@@ -624,6 +623,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1673731654}
   - component: {fileID: 1673731653}
+  - component: {fileID: 1673731655}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -661,6 +661,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1673731655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1673731652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2c112877e54434ea59a682a85e55c36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _groundTilemap: {fileID: 1327253938}
+  _wallsTilemap: {fileID: 1783388742}
+  _doorwayTilemap: {fileID: 1381553571}
+  _playerTilemap: {fileID: 2066015327}
 --- !u!1 &1783388739
 GameObject:
   m_ObjectHideFlags: 0

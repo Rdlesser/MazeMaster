@@ -1,21 +1,13 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
-using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] private Vector2Int _mapSize = new Vector2Int(10, 10);
-    // Todo: improve - Make this accept a scriptable object that maps a name to a tile
-    [SerializeField] private MazeTilesList _mazeTilesList;
-    [SerializeField] private Tilemap _groundTilemap;
-    [SerializeField] private Tilemap _wallsTilemap;
-    [SerializeField] private Tilemap _doorwayTilemap;
+    [SerializeField] private MapData _mapData;
+    [SerializeField] private MapManager _mapManager;
     [SerializeField] private Tilemap _playerTilemap;
 
     private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
@@ -35,211 +27,63 @@ public class GameManager : MonoBehaviour
     
     private void Awake()
     {
-        PreprocessTiles();
-    }
-
-    private void PreprocessTiles()
-    {
-        foreach (var tileData in _mazeTilesList.TileDatas)
+        if (_mapData != null)
         {
-            _tileDictionary[tileData.Name.ToLower()] = tileData.Tile;
+            _mapManager.MapInitted += SpawnPlayer;
+            InitMapManager(_mapData);
         }
-        
     }
 
-    void Start()
+    private void InitMapManager(MapData mapData)
     {
-        SetGround();
-        SetBoundaries();
-        SetDoorways();
-        SpawnPlayer();
+        _mapManager.Init(mapData);
+        _mapManager.PlayerReachedGoalAction += OnPlayerWon;
     }
 
     private void SpawnPlayer()
     {
-        _playerTilemap.ClearAllTiles();
-        _playerPosition = _entrancePosition;
-        _playerTilemap.SetTile(_entrancePosition, _tileDictionary[Player]);
-        _playerPosition = _entrancePosition;
+        _mapManager.SpawnPlayer();
         _isGameInProgress = true;
     }
-
-
-    private void SetGround()
+    
+    public void OnPlayerPressedUp(InputAction.CallbackContext context)
     {
-        for (int i = 0; i < _mapSize.x; i++)
-        {
-            for (int j = 0; j < _mapSize.y; j++)
-            {
-                SetTile(_groundTilemap, new Vector3Int(i, j, 0), _tileDictionary[Ground]);
-            }
-        }
-    }
-
-    private void SetBoundaries()
-    {
-        SetUpperBoundaries();
-        SetLowerBoundaries();
-        SetLeftBoundaries();
-        SetRightBoundaries();
-    }
-
-    private void SetUpperBoundaries()
-    {
-        for (int x = 0; x < _mapSize.x; x++)
-        {
-            SetTile(_wallsTilemap, new Vector3Int(x, _mapSize.y - 1, 0), _tileDictionary[Wall]);
-        }
-    }
-
-    private void SetLowerBoundaries()
-    {
-        for (int x = 0; x < _mapSize.x; x++)
-        {
-            SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
-        }
-    }
-
-    private void SetLeftBoundaries()
-    {
-        for (int y = 0; y < _mapSize.y; y++)
-        {
-            SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
-        }
-    }
-
-    private void SetRightBoundaries()
-    {
-        
-        for (int y = 0; y < _mapSize.y; y++)
-        {
-            SetTile(_wallsTilemap, new Vector3Int(_mapSize.x - 1, y, 0), _tileDictionary[Wall]);
-        }
-    }
-
-    private void SetDoorways()
-    {
-        _entrancePosition = GetRandomPosition();
-
-        // TODO: Possibility of an infinite loop - research what can be done
-        do
-        {
-            _exitPosition = GetRandomPosition();
-
-        } while (_exitPosition == _entrancePosition);
-        
-        SetTile(_doorwayTilemap, _entrancePosition, _tileDictionary[Entrance]);
-        SetTile(_doorwayTilemap, _exitPosition, _tileDictionary[Exit]);
-    }
-
-    private void SetTile(Tilemap tilemap, Vector3Int tilePosition, TileBase tileBase)
-    {
-        tilemap.SetTile(tilePosition, tileBase);
-    }
-
-    private Vector3Int GetRandomPosition()
-    {
-        var xPosition = Random.Range(1, _mapSize.x - 2);
-        var yPosition = Random.Range(1, _mapSize.y - 2);
-        return new Vector3Int(xPosition, yPosition, 0);
-    }
-
-    public void OnPlayerPressUp(InputAction.CallbackContext context)
-    {
-        if (!context.performed)
-        {
-            return;
-        }
-        
-        var movePosition = _playerPosition;
-        movePosition.y++;
-        if (IsPositionBlocked(movePosition))
+        if (!_isGameInProgress || !context.performed)
         {
             return;
         }
 
-        MovePlayer(movePosition);
+        _mapManager.MovePlayer(Vector3Int.up);
     }
     
     public void OnPlayerPressDown(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!_isGameInProgress || !context.performed)
         {
             return;
         }
         
-        var movePosition = _playerPosition;
-        movePosition.y--;
-        if (IsPositionBlocked(movePosition))
-        {
-            return;
-        }
-
-        MovePlayer(movePosition);
+        _mapManager.MovePlayer(Vector3Int.down);
     }
     
     public void OnPlayerPressLeft(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!_isGameInProgress || !context.performed)
         {
             return;
         }
         
-        var movePosition = _playerPosition;
-        movePosition.x--;
-        if (IsPositionBlocked(movePosition))
-        {
-            return;
-        }
-
-        MovePlayer(movePosition);
+        _mapManager.MovePlayer(Vector3Int.left);
     }
     
     public void OnPlayerPressRight(InputAction.CallbackContext context)
     {
-        if (!context.performed)
+        if (!_isGameInProgress || !context.performed)
         {
             return;
         }
         
-        var movePosition = _playerPosition;
-        movePosition.x++;
-        
-        if (IsPositionBlocked(movePosition))
-        {
-            return;
-        }
-
-        MovePlayer(movePosition);
-    }
-
-    private bool IsPositionBlocked(Vector3Int movePosition)
-    {
-        var tile = _wallsTilemap.GetTile(movePosition);
-        
-        if (tile != null && tile.name.Equals(Wall, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    private void MovePlayer(Vector3Int movePosition)
-    {
-        if (!_isGameInProgress)
-        {
-            return;
-        }
-        
-        SetTile(_playerTilemap, _playerPosition, null);
-        _playerPosition = movePosition;
-        SetTile(_playerTilemap, _playerPosition, _tileDictionary[Player]);
-        
-        if (IsPlayerAtExit())
-        {
-            OnPlayerWon();
-        }
+        _mapManager.MovePlayer(Vector3Int.right);
     }
 
     private void OnPlayerWon()
@@ -248,8 +92,4 @@ public class GameManager : MonoBehaviour
         Debug.Log("the player won");
     }
 
-    private bool IsPlayerAtExit()
-    {
-        return _playerPosition == _exitPosition;
-    }
 }

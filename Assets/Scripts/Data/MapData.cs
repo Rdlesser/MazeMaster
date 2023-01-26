@@ -5,5 +5,5 @@ using UnityEngine;
 public class MapData
 {
         public Vector2Int MapSize;
-        
+        public MazeTilesList MazeTilesList;
 }
