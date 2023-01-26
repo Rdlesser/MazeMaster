@@ -44,8 +44,14 @@ TagManager:
   - name: Ground
     uniqueID: 2196588181
     locked: 0
+  - name: Walls
+    uniqueID: 3513836737
+    locked: 0
   - name: Doorways
     uniqueID: 71728031
+    locked: 0
+  - name: Stars
+    uniqueID: 24105023
     locked: 0
   - name: Player
     uniqueID: 400096367
