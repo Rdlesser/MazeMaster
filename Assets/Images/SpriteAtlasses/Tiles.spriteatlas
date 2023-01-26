@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Tiles
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 256
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 678650b6b9800d54f927c734e518eeaf, type: 3}
+    - {fileID: 2800000, guid: 71bf422ab6bd34d4d8cbc89ae39039b8, type: 3}
+    - {fileID: 2800000, guid: 12a8e3da5c3820a46a5790abe992a94f, type: 3}
+    - {fileID: 2800000, guid: 33841a73811d6d54081640fa1ff0c4d8, type: 3}
+    - {fileID: 2800000, guid: 71f8d91599051bf47bbf4901fee7b5ce, type: 3}
+    - {fileID: 2800000, guid: 1d0b5beca328e5943b3184316ce204c6, type: 3}
+    - {fileID: 2800000, guid: 5da22d0aad2214547a2ef14a3f011df9, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 33841a73811d6d54081640fa1ff0c4d8, type: 3}
+  - {fileID: 21300000, guid: 71f8d91599051bf47bbf4901fee7b5ce, type: 3}
+  - {fileID: 21300000, guid: 678650b6b9800d54f927c734e518eeaf, type: 3}
+  - {fileID: 21300000, guid: 5da22d0aad2214547a2ef14a3f011df9, type: 3}
+  - {fileID: 21300000, guid: 71bf422ab6bd34d4d8cbc89ae39039b8, type: 3}
+  - {fileID: 21300000, guid: 12a8e3da5c3820a46a5790abe992a94f, type: 3}
+  - {fileID: 21300000, guid: 1d0b5beca328e5943b3184316ce204c6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Wall
+  - Player_large
+  - Lava
+  - star
+  - Ground
+  - background_green
+  - Player_small
+  m_RenderDataMap: {}
+  m_Tag: Tiles
+  m_IsVariant: 0
