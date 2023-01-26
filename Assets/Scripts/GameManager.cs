@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GameManager : MonoBehaviour
     [FormerlySerializedAs("_groundTile")] [SerializeField] private List<TileBase> _tileList;
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private Tilemap _wallsTilemap;
+    [SerializeField] private Tilemap _doorwayTilemap;
 
     private Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
 
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
     {
         SetGround();
         SetBoundaries();
+        SetDoorways();
     }
 
     private void SetGround()
@@ -97,4 +100,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void SetDoorways()
+    {
+        Vector3Int entrancePosition = GetRandomPosition();
+        Vector3Int exitPosition;
+        
+        // TODO: Possibility of an infinite loop - search what can be done
+        do
+        {
+            exitPosition = GetRandomPosition();
+
+        } while (exitPosition == entrancePosition);
+        
+        _doorwayTilemap.SetTile(entrancePosition, _tileDictionary[Entrance]);
+        _doorwayTilemap.SetTile(exitPosition, _tileDictionary[Exit]);
+    }
+    
+    private Vector3Int GetRandomPosition()
+    {
+        var xPosition = Random.Range(1, _mapSize.x - 2);
+        var yPosition = Random.Range(1, _mapSize.y - 2);
+        return new Vector3Int(xPosition, yPosition, 0);
+    }
 }

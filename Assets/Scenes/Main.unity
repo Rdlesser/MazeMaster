@@ -421,8 +421,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 71728031
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -522,6 +522,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a1c88d1091a32f6478c3213043599a77, type: 2}
   _groundTilemap: {fileID: 1327253938}
   _wallsTilemap: {fileID: 1783388742}
+  _doorwayTilemap: {fileID: 1381553571}
 --- !u!1 &1673731652
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,8 +781,8 @@ TilemapRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 400096367
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
