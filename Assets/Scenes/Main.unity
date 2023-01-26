@@ -523,6 +523,7 @@ MonoBehaviour:
   _groundTilemap: {fileID: 1327253938}
   _wallsTilemap: {fileID: 1783388742}
   _doorwayTilemap: {fileID: 1381553571}
+  _playerTilemap: {fileID: 2066015327}
 --- !u!1 &1673731652
 GameObject:
   m_ObjectHideFlags: 0

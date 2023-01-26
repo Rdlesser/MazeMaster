@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
     private Vector3Int _entrancePosition;
     private Vector3Int _exitPosition;
+    private Vector3Int _playerPosition;
 
 
     private static readonly string Ground = "ground";
@@ -30,7 +31,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         PreprocessTiles();
-        SceneManager.sceneLoaded += StartGame;
     }
 
     private void PreprocessTiles()
@@ -46,17 +46,15 @@ public class GameManager : MonoBehaviour
         SetGround();
         SetBoundaries();
         SetDoorways();
-    }
-
-    private void StartGame(Scene arg0, LoadSceneMode arg1)
-    {
         SpawnPlayer();
     }
 
     private void SpawnPlayer()
     {
         _playerTilemap.ClearAllTiles();
+        _playerPosition = _entrancePosition;
         _playerTilemap.SetTile(_entrancePosition, _tileDictionary[Player]);
+        _playerPosition = _entrancePosition;
     }
 
 
@@ -118,18 +116,17 @@ public class GameManager : MonoBehaviour
 
     private void SetDoorways()
     {
-        Vector3Int entrancePosition = GetRandomPosition();
-        Vector3Int exitPosition;
-        
+        _entrancePosition = GetRandomPosition();
+
         // TODO: Possibility of an infinite loop - search what can be done
         do
         {
-            exitPosition = GetRandomPosition();
+            _exitPosition = GetRandomPosition();
 
-        } while (exitPosition == entrancePosition);
+        } while (_exitPosition == _entrancePosition);
         
-        _doorwayTilemap.SetTile(entrancePosition, _tileDictionary[Entrance]);
-        _doorwayTilemap.SetTile(exitPosition, _tileDictionary[Exit]);
+        _doorwayTilemap.SetTile(_entrancePosition, _tileDictionary[Entrance]);
+        _doorwayTilemap.SetTile(_exitPosition, _tileDictionary[Exit]);
     }
     
     private Vector3Int GetRandomPosition()
