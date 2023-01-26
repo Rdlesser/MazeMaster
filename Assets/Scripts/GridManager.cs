@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
-public class MapManager : MonoBehaviour
+public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private Tilemap _wallsTilemap;
@@ -182,5 +182,11 @@ public class MapManager : MonoBehaviour
         SetTile(_playerTilemap, _entrancePosition, _tileDictionary[Player]);
         _playerPosition = _entrancePosition;
 
+    }
+
+    private void OnDestroy()
+    {
+        MapInitted = null;
+        PlayerReachedGoalAction = null;
     }
 }
