@@ -1,7 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -15,18 +14,23 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Tilemap _groundTilemap;
     [SerializeField] private Tilemap _wallsTilemap;
     [SerializeField] private Tilemap _doorwayTilemap;
+    [SerializeField] private Tilemap _playerTilemap;
 
-    private Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
+    private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
+    private Vector3Int _entrancePosition;
+    private Vector3Int _exitPosition;
 
-    private static string Ground = "ground";
-    private static string Wall = "wall";
-    private static string Entrance = "entrance";
-    private static string Exit = "exit";
-    private static string Player = "player";
+
+    private static readonly string Ground = "ground";
+    private static readonly string Wall = "wall";
+    private static readonly string Entrance = "entrance";
+    private static readonly string Exit = "exit";
+    private static readonly string Player = "player";
     
     private void Awake()
     {
         PreprocessTiles();
+        SceneManager.sceneLoaded += StartGame;
     }
 
     private void PreprocessTiles()
@@ -43,6 +47,18 @@ public class GameManager : MonoBehaviour
         SetBoundaries();
         SetDoorways();
     }
+
+    private void StartGame(Scene arg0, LoadSceneMode arg1)
+    {
+        SpawnPlayer();
+    }
+
+    private void SpawnPlayer()
+    {
+        _playerTilemap.ClearAllTiles();
+        _playerTilemap.SetTile(_entrancePosition, _tileDictionary[Player]);
+    }
+
 
     private void SetGround()
     {
