@@ -71,8 +71,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < _mapSize.y; j++)
             {
-                var tilePosition = new Vector3Int(i, j, 0);
-                _groundTilemap.SetTile(tilePosition, _tileDictionary[Ground]);
+                SetTile(_groundTilemap, new Vector3Int(i, j, 0), _tileDictionary[Ground]);
             }
         }
     }
@@ -89,8 +88,7 @@ public class GameManager : MonoBehaviour
     {
         for (int x = 0; x < _mapSize.x; x++)
         {
-            var tilePosition = new Vector3Int(x, _mapSize.y - 1, 0);
-            _wallsTilemap.SetTile(tilePosition, _tileDictionary[Wall]);
+            SetTile(_wallsTilemap, new Vector3Int(x, _mapSize.y - 1, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -98,8 +96,7 @@ public class GameManager : MonoBehaviour
     {
         for (int x = 0; x < _mapSize.x; x++)
         {
-            var tilePosition = new Vector3Int(x, 0, 0);
-            _wallsTilemap.SetTile(tilePosition, _tileDictionary[Wall]);
+            SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -107,17 +104,16 @@ public class GameManager : MonoBehaviour
     {
         for (int y = 0; y < _mapSize.y; y++)
         {
-            var tilePosition = new Vector3Int(0, y, 0);
-            _wallsTilemap.SetTile(tilePosition, _tileDictionary[Wall]);
+            SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
         }
     }
 
     private void SetRightBoundaries()
     {
+        
         for (int y = 0; y < _mapSize.y; y++)
         {
-            var tilePosition = new Vector3Int(_mapSize.x - 1, y, 0);
-            _wallsTilemap.SetTile(tilePosition, _tileDictionary[Wall]);
+            SetTile(_wallsTilemap, new Vector3Int(_mapSize.x - 1, y, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -125,17 +121,22 @@ public class GameManager : MonoBehaviour
     {
         _entrancePosition = GetRandomPosition();
 
-        // TODO: Possibility of an infinite loop - search what can be done
+        // TODO: Possibility of an infinite loop - research what can be done
         do
         {
             _exitPosition = GetRandomPosition();
 
         } while (_exitPosition == _entrancePosition);
         
-        _doorwayTilemap.SetTile(_entrancePosition, _tileDictionary[Entrance]);
-        _doorwayTilemap.SetTile(_exitPosition, _tileDictionary[Exit]);
+        SetTile(_doorwayTilemap, _entrancePosition, _tileDictionary[Entrance]);
+        SetTile(_doorwayTilemap, _exitPosition, _tileDictionary[Exit]);
     }
-    
+
+    private void SetTile(Tilemap tilemap, Vector3Int tilePosition, TileBase tileBase)
+    {
+        tilemap.SetTile(tilePosition, tileBase);
+    }
+
     private Vector3Int GetRandomPosition()
     {
         var xPosition = Random.Range(1, _mapSize.x - 2);
@@ -154,7 +155,6 @@ public class GameManager : MonoBehaviour
         movePosition.y++;
         if (IsPositionBlocked(movePosition))
         {
-            Debug.Log("Blocked");
             return;
         }
 
@@ -172,7 +172,6 @@ public class GameManager : MonoBehaviour
         movePosition.y--;
         if (IsPositionBlocked(movePosition))
         {
-            Debug.Log("Blocked");
             return;
         }
 
@@ -190,7 +189,6 @@ public class GameManager : MonoBehaviour
         movePosition.x--;
         if (IsPositionBlocked(movePosition))
         {
-            Debug.Log("Blocked");
             return;
         }
 
@@ -234,9 +232,10 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        _playerTilemap.SetTile(_playerPosition, null);
+        SetTile(_playerTilemap, _playerPosition, null);
         _playerPosition = movePosition;
-        _playerTilemap.SetTile(_playerPosition, _tileDictionary[Player]);
+        SetTile(_playerTilemap, _playerPosition, _tileDictionary[Player]);
+        
         if (IsPlayerAtExit())
         {
             OnPlayerWon();
