@@ -517,8 +517,7 @@ MonoBehaviour:
   _mapData:
     MapSize: {x: 8, y: 8}
     MazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
-  _mapManager: {fileID: 1673731655}
-  _playerTilemap: {fileID: 2066015327}
+  _gridManager: {fileID: 1673731655}
 --- !u!114 &1429496756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +547,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1429496755}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnPlayerPressUp
+        m_MethodName: OnPlayerPressedUp
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -564,7 +563,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1429496755}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnPlayerPressDown
+        m_MethodName: OnPlayerPressedDown
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -580,7 +579,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1429496755}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnPlayerPressLeft
+        m_MethodName: OnPlayerPressedLeft
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -596,7 +595,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1429496755}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnPlayerPressRight
+        m_MethodName: OnPlayerPressedRight
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

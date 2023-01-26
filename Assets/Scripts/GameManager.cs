@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         _gridManager.MovePlayer(Vector3Int.up);
     }
     
-    public void OnPlayerPressDown(InputAction.CallbackContext context)
+    public void OnPlayerPressedDown(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
         {
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         _gridManager.MovePlayer(Vector3Int.down);
     }
     
-    public void OnPlayerPressLeft(InputAction.CallbackContext context)
+    public void OnPlayerPressedLeft(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
         {
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
         _gridManager.MovePlayer(Vector3Int.left);
     }
     
-    public void OnPlayerPressRight(InputAction.CallbackContext context)
+    public void OnPlayerPressedRight(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
         {

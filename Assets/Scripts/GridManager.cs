@@ -14,6 +14,7 @@ public class GridManager : MonoBehaviour
     private MapData _mapData;
     
     private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
+    
     private Vector3Int _entrancePosition;
     private Vector3Int _exitPosition;
     private Vector3Int _playerPosition;
@@ -100,8 +101,7 @@ public class GridManager : MonoBehaviour
     private void SetDoorways()
     {
         _entrancePosition = GetRandomPosition();
-
-        // TODO: Possibility of an infinite loop - research what can be done
+        
         do
         {
             _exitPosition = GetRandomPosition();
