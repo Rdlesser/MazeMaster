@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     private static readonly string Entrance = "entrance";
     private static readonly string Exit = "exit";
     private static readonly string Player = "player";
+
+    private bool _isGameInProgress = false;
     
     private void Awake()
     {
@@ -57,6 +59,7 @@ public class GameManager : MonoBehaviour
         _playerPosition = _entrancePosition;
         _playerTilemap.SetTile(_entrancePosition, _tileDictionary[Player]);
         _playerPosition = _entrancePosition;
+        _isGameInProgress = true;
     }
 
 
@@ -224,8 +227,28 @@ public class GameManager : MonoBehaviour
 
     private void MovePlayer(Vector3Int movePosition)
     {
+        if (!_isGameInProgress)
+        {
+            return;
+        }
+        
         _playerTilemap.SetTile(_playerPosition, null);
         _playerPosition = movePosition;
         _playerTilemap.SetTile(_playerPosition, _tileDictionary[Player]);
+        if (IsPlayerAtExit())
+        {
+            OnPlayerWon();
+        }
+    }
+
+    private void OnPlayerWon()
+    {
+        _isGameInProgress = false;
+        Debug.Log("the player won");
+    }
+
+    private bool IsPlayerAtExit()
+    {
+        return _playerPosition == _exitPosition;
     }
 }
