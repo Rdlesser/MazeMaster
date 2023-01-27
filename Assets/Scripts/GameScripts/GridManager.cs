@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap _groundTilemap;
-    [SerializeField] private Tilemap _wallsTilemap;
-    [SerializeField] private Tilemap _doorwayTilemap;
+    [SerializeField] private Tilemap _wallsTilemap; 
+    [SerializeField] private Tilemap _overlayTilemap;
     [SerializeField] private Tilemap _playerTilemap;
 
     private MapData _mapData;
@@ -28,9 +29,11 @@ public class GridManager : MonoBehaviour
     private static readonly string Entrance = "entrance";
     private static readonly string Exit = "exit";
     private static readonly string Player = "player";
+    private static readonly string Lava = "lava";
 
     public Action MapInitted;
     public Action PlayerReachedGoalAction;
+    public Action PlayerDied;
 
     public void Init(MapData mapData)
     {
@@ -41,7 +44,7 @@ public class GridManager : MonoBehaviour
         SetBoundaries();
         SetDoorways();
         SetExtraWalls();
-        
+        SetLavaTiles();
         CenterGameOnScreen();
         DispatchInitComplete();
     }
@@ -147,9 +150,9 @@ public class GridManager : MonoBehaviour
 
         } while (_exitPosition == _entrancePosition);
         
-        SetTile(_doorwayTilemap, _entrancePosition, _tileDictionary[Entrance]);
+        SetTile(_overlayTilemap, _entrancePosition, _tileDictionary[Entrance]);
         UpdateGridStatus(_entrancePosition.x, _entrancePosition.y, NodeStatus.Traversable);
-        SetTile(_doorwayTilemap, _exitPosition, _tileDictionary[Exit]);
+        SetTile(_overlayTilemap, _exitPosition, _tileDictionary[Exit]);
         UpdateGridStatus(_exitPosition.x, _exitPosition.y, NodeStatus.Traversable);
     }
 
@@ -162,10 +165,10 @@ public class GridManager : MonoBehaviour
 
     private void SetExtraWalls()
     {
-        // TODO: improve using recursion
+        // TODO: this is a greedy algorithm and can be improved using recursion
         for (int i = 0; i < _mapData.ExtraWalls; i++)
         {
-            if (!TrySetRandomWall())
+            if (!TrySetTileAtRandom(_wallsTilemap, _tileDictionary[Wall]))
             {
                 Debug.LogError($"Could not set all extra walls - only added {i-1}");
             }
@@ -173,7 +176,19 @@ public class GridManager : MonoBehaviour
         
     }
 
-    private bool  TrySetRandomWall()
+    private void SetLavaTiles()
+    {
+        // TODO: this is a greedy algorithm and can be improved using recursion
+        for (int i = 0; i < _mapData.LavaTileCount; i++)
+        {
+            if (!TrySetTileAtRandom(_overlayTilemap, _tileDictionary[Lava]))
+            {
+                Debug.LogError($"Could not set all laval tiles - only added {i-1}");
+            }
+        }
+    }
+
+    private bool  TrySetTileAtRandom(Tilemap tilemap, TileBase tile)
     {
         var randomEmptyPosition = GetRandomNonBlockingEmptyPosition();
         if (randomEmptyPosition == null)
@@ -183,7 +198,7 @@ public class GridManager : MonoBehaviour
 
         var emptyPosition = (Vector3Int)randomEmptyPosition;
         
-        SetTile(_wallsTilemap, emptyPosition, _tileDictionary[Wall]);
+        SetTile(tilemap, emptyPosition, tile);
         UpdateGridStatus(emptyPosition.x, emptyPosition.y, NodeStatus.Blocked);
         
         return true;
@@ -196,6 +211,35 @@ public class GridManager : MonoBehaviour
 
     private Vector3Int? GetRandomNonBlockingEmptyPosition()
     {
+        List<int> indexList = GetShuffledIndexList();
+
+        foreach (var index in indexList)
+        {
+            var node = _emptyPathNodes[index];
+            if (IsPossibleBlockingPosition(node))
+            {
+                return new Vector3Int(node.x, node.y, 0);
+            }
+        }
+
+        return null;
+    }
+
+    private bool IsPossibleBlockingPosition(PathNode node)
+    {
+        bool ans = false;
+        node.SetNodeStatus(NodeStatus.Blocked);
+        if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
+        {
+            ans = true;
+        }
+        
+        node.SetNodeStatus(NodeStatus.Empty);
+        return ans;
+    }
+
+    private List<int> GetShuffledIndexList()
+    {
         List<int> indexList = new List<int>();
         for (int i = 0; i < _emptyPathNodes.Count; i++)
         {
@@ -204,18 +248,7 @@ public class GridManager : MonoBehaviour
 
         Misc.ShuffleIntList(ref indexList);
 
-        foreach (var index in indexList)
-        {
-            var node = _emptyPathNodes[index];
-            node.SetNodeStatus(NodeStatus.Blocked);
-            if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
-            {
-                node.SetNodeStatus(NodeStatus.Empty);
-                return new Vector3Int(node.x, node.y, 0);
-            }
-        }
-
-        return null;
+        return indexList;
     }
 
     private Vector3Int GetRandomEmptyPosition()
@@ -253,6 +286,28 @@ public class GridManager : MonoBehaviour
         {
             OnPlayerReachedGoal();
         }
+
+        if (IsPlayerOnLava())
+        {
+            OnPlayerDied();
+        }
+    }
+
+    private void OnPlayerDied()
+    {
+        PlayerDied?.Invoke();
+    }
+
+    private bool IsPlayerOnLava()
+    {
+        var tile = _overlayTilemap.GetTile(_playerPosition);
+        
+        if (tile != null && tile.name.Equals(Lava, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private void UpdatePlayerPosition(Vector3Int movePosition)
@@ -289,5 +344,6 @@ public class GridManager : MonoBehaviour
     {
         MapInitted = null;
         PlayerReachedGoalAction = null;
+        PlayerDied = null;
     }
 }

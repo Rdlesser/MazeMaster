@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Lava
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 71bf422ab6bd34d4d8cbc89ae39039b8, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.4739378, b: 0, a: 1}
   m_Transform:
     e00: 1
     e01: 0

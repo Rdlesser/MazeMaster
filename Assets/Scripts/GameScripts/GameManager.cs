@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     {
         _gridManager.Init(mapData);
         _gridManager.PlayerReachedGoalAction += OnPlayerWon;
+        _gridManager.PlayerDied += OnPlayerLost;
     }
 
     private void InitCameraFitter(MapData mapData)
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
         _gridManager.SpawnPlayer();
         _isGameInProgress = true;
     }
-    
+
     public void OnPlayerPressedUp(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
@@ -52,7 +53,7 @@ public class GameManager : MonoBehaviour
 
         _gridManager.MovePlayer(Vector3Int.up);
     }
-    
+
     public void OnPlayerPressedDown(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
@@ -62,7 +63,7 @@ public class GameManager : MonoBehaviour
         
         _gridManager.MovePlayer(Vector3Int.down);
     }
-    
+
     public void OnPlayerPressedLeft(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
         
         _gridManager.MovePlayer(Vector3Int.left);
     }
-    
+
     public void OnPlayerPressedRight(InputAction.CallbackContext context)
     {
         if (!_isGameInProgress || !context.performed)
@@ -89,4 +90,9 @@ public class GameManager : MonoBehaviour
         Debug.Log("the player won");
     }
 
+    private void OnPlayerLost()
+    {
+        _isGameInProgress = false;
+        Debug.Log("the player lost");
+    }
 }

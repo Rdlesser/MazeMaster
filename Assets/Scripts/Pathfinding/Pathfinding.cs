@@ -7,16 +7,13 @@ using UnityEngine;
 public class Pathfinding
 {
     private const int MOVE_STRAIGHT_COST = 10;
-    
-    public static Pathfinding Instance { get; private set; }
-    
+
     private Grid<PathNode> _grid;
     private List<PathNode> _openList;
     private List<PathNode> _closedList;
 
     public Pathfinding(int width, int height)
     {
-        Instance = this;
         _grid = new Grid<PathNode>(width, height, 10f, Vector3.zero,
             (Grid<PathNode> g, int x, int y) => new PathNode(g, x, y));
     }
@@ -38,16 +35,13 @@ public class Pathfinding
             return null;    
         }
 
-        else
+        List<Vector3> vectorPath = new List<Vector3>();
+        foreach (var pathNode in path)
         {
-            List<Vector3> vectorPath = new List<Vector3>();
-            foreach (var pathNode in path)
-            {
-                vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * _grid.GetCellSize() + Vector3.one * _grid.GetCellSize() * 0.5f);
-            }
-
-            return vectorPath;
+            vectorPath.Add(new Vector3(pathNode.x, pathNode.y) * _grid.GetCellSize() + Vector3.one * _grid.GetCellSize() * 0.5f);
         }
+
+        return vectorPath;
     }
 
     public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
@@ -116,7 +110,7 @@ public class Pathfinding
         return null;
     }
 
-    // TODO: instead of dynamically identifying neighbours - precalculate neighbours as soon as we make the grid
+    // TODO: improvement - instead of dynamically identifying neighbours - precalculate neighbours as soon as we make the grid
     private List<PathNode> GetNeighbourList(PathNode currentNode)
     {
         List<PathNode> neighboursList = new List<PathNode>();
@@ -172,7 +166,7 @@ public class Pathfinding
         return MOVE_STRAIGHT_COST * (xDistance + yDistance);
     }
 
-    // TODO: performance can be improved by using binary search
+    // TODO: performance can be improved using binary search
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
     {
         PathNode lowestFCostNode = pathNodeList[0];

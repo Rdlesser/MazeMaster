@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 1381553571}
   - component: {fileID: 1381553570}
   m_Layer: 0
-  m_Name: Tilemap_Doorways
+  m_Name: Tilemap_Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -531,6 +531,7 @@ MonoBehaviour:
   _mapData:
     MapSize: {x: 10, y: 10}
     ExtraWalls: 15
+    LavaTileCount: 10
     MazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
   _gridManager: {fileID: 1673731655}
   _cameraFitter: {fileID: 519420030}
@@ -690,7 +691,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundTilemap: {fileID: 1327253938}
   _wallsTilemap: {fileID: 1783388742}
-  _doorwayTilemap: {fileID: 1381553571}
+  _overlayTilemap: {fileID: 1381553571}
   _playerTilemap: {fileID: 2066015327}
 --- !u!1 &1783388739
 GameObject:
