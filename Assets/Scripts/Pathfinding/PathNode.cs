@@ -1,4 +1,11 @@
 ﻿
+public enum NodeStatus
+{
+    Free = 0,
+    Wall = 1,
+    Doorway = 2
+}
+
 public class PathNode
 {
     private Grid<PathNode> _grid;
@@ -9,7 +16,7 @@ public class PathNode
     public int hCost;
     public int fCost;
 
-    public bool isWalkable;
+    public NodeStatus nodeStatus;
     public PathNode cameFromNode;
     
     public PathNode(Grid<PathNode> grid, int x, int y)
@@ -17,7 +24,7 @@ public class PathNode
         _grid = grid;
         this.x = x;
         this.y = y;
-        isWalkable = true;
+        nodeStatus = NodeStatus.Free;
     }
 
     public void CalculateFCost()
@@ -25,9 +32,9 @@ public class PathNode
         fCost = gCost + hCost;
     }
 
-    public void SetIsWalkable(bool isWalkable)
+    public void SetNodeStatus(NodeStatus newNodeStatus)
     {
-        this.isWalkable = isWalkable;
+        nodeStatus = newNodeStatus;
         _grid.TriggerGridObjectChanged(x, y);
     }
 

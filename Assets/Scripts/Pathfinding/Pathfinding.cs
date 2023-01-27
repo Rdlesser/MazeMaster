@@ -50,7 +50,7 @@ public class Pathfinding
         }
     }
 
-    private List<PathNode> FindPath(int startX, int startY, int endX, int endY)
+    public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
     {
         PathNode startNode = _grid.GetGridObject(startX, startY);
         PathNode endNode = _grid.GetGridObject(endX, endY);
@@ -91,7 +91,7 @@ public class Pathfinding
                     continue;
                 }
 
-                if (!neighbourNode.isWalkable)
+                if (neighbourNode.nodeStatus != NodeStatus.Free && neighbourNode.nodeStatus != NodeStatus.Doorway)
                 {
                     _closedList.Add(neighbourNode);
                     continue;

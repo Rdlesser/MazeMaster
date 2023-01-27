@@ -12,7 +12,11 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Tilemap _playerTilemap;
 
     private MapData _mapData;
-    
+
+    private Pathfinding _pathfinding;
+    private Grid<PathNode> _grid;
+    private List<PathNode> _emptyPathNodes;
+
     private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
     
     private Vector3Int _entrancePosition;
@@ -33,8 +37,10 @@ public class GridManager : MonoBehaviour
         _mapData = mapData;
         PreprocessTiles();
         SetGround();
+        InstantiatePathfinding();
         SetBoundaries();
         SetDoorways();
+        SetExtraWalls();
         CenterGameOnScreen();
         DispatchInitComplete();
     }
@@ -65,6 +71,26 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    private void InstantiatePathfinding()
+    {
+        _pathfinding = new Pathfinding(_mapData.MapSize.x, _mapData.MapSize.y);
+        _grid = _pathfinding.GetGrid();
+        InstantiateFreeNodesList();
+        
+    }
+
+    private void InstantiateFreeNodesList()
+    {
+        _emptyPathNodes = new List<PathNode>();
+        for (int x = 0; x < _grid.GetWidth(); x++)
+        {
+            for (int y = 0; y < _grid.GetHeight(); y++)
+            {
+                _emptyPathNodes.Add(_grid.GetGridObject(x, y));
+            }
+        }
+    }
+
     private void SetBoundaries()
     {
         SetUpperBoundaries();
@@ -78,6 +104,7 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, _mapData.MapSize.y - 1, 0), _tileDictionary[Wall]);
+            UpdateGridStatus(x, _mapData.MapSize.y - 1, NodeStatus.Wall);
         }
     }
 
@@ -86,6 +113,7 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
+            UpdateGridStatus(x, 0, NodeStatus.Wall);
         }
     }
 
@@ -94,6 +122,7 @@ public class GridManager : MonoBehaviour
         for (int y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
+            UpdateGridStatus(0, y, NodeStatus.Wall);
         }
     }
 
@@ -103,21 +132,59 @@ public class GridManager : MonoBehaviour
         for (int y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(_mapData.MapSize.x - 1, y, 0), _tileDictionary[Wall]);
+            UpdateGridStatus(_mapData.MapSize.x - 1, y, NodeStatus.Wall);
         }
     }
 
     private void SetDoorways()
     {
-        _entrancePosition = GetRandomPosition();
+        _entrancePosition = GetRandomEmptyPosition();
         
         do
         {
-            _exitPosition = GetRandomPosition();
+            _exitPosition = GetRandomEmptyPosition();
 
         } while (_exitPosition == _entrancePosition);
         
         SetTile(_doorwayTilemap, _entrancePosition, _tileDictionary[Entrance]);
+        UpdateGridStatus(_entrancePosition.x, _entrancePosition.y, NodeStatus.Doorway);
         SetTile(_doorwayTilemap, _exitPosition, _tileDictionary[Exit]);
+        UpdateGridStatus(_exitPosition.x, _exitPosition.y, NodeStatus.Doorway);
+    }
+
+    private void UpdateGridStatus(int x, int y, NodeStatus nodeStatus)
+    {
+        var gridObject = _grid.GetGridObject(x, y);
+        gridObject.nodeStatus = nodeStatus;
+        _emptyPathNodes.Remove(gridObject);
+    }
+
+    private void SetExtraWalls()
+    {
+        for (int i = 0; i < _mapData.ExtraWalls; i++)
+        {
+            if (!TrySetRandomWall())
+            {
+                Debug.LogError($"Could not set all extra walls - only added {i-1}");
+            }
+        }
+        
+    }
+
+    private bool  TrySetRandomWall()
+    {
+        var randomEmptyPosition = GetRandomNonBlockingEmptyPosition();
+        if (randomEmptyPosition == null)
+        {
+            return false;
+        }
+
+        var emptyPosition = (Vector3Int)randomEmptyPosition;
+        
+        SetTile(_wallsTilemap, emptyPosition, _tileDictionary[Wall]);
+        UpdateGridStatus(emptyPosition.x, emptyPosition.y, NodeStatus.Wall);
+        
+        return true;
     }
 
     private void SetTile(Tilemap tilemap, Vector3Int tilePosition, TileBase tileBase)
@@ -125,11 +192,35 @@ public class GridManager : MonoBehaviour
         tilemap.SetTile(tilePosition, tileBase);
     }
 
-    private Vector3Int GetRandomPosition()
+    private Vector3Int? GetRandomNonBlockingEmptyPosition()
     {
-        var xPosition = Random.Range(1, _mapData.MapSize.x - 2);
-        var yPosition = Random.Range(1, _mapData.MapSize.y - 2);
-        return new Vector3Int(xPosition, yPosition, 0);
+        List<int> indexList = new List<int>();
+        for (int i = 0; i < _emptyPathNodes.Count; i++)
+        {
+            indexList.Add(i);
+        }
+
+        Misc.ShuffleIntList(ref indexList);
+
+        foreach (var index in indexList)
+        {
+            var node = _emptyPathNodes[index];
+            node.SetNodeStatus(NodeStatus.Wall);
+            if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
+            {
+                node.SetNodeStatus(NodeStatus.Free);
+                return new Vector3Int(node.x, node.y, 0);
+            }
+        }
+
+        return null;
+    }
+
+    private Vector3Int GetRandomEmptyPosition()
+    {
+        var randomIndex = Random.Range(0, _emptyPathNodes.Count);
+        var node = _emptyPathNodes[randomIndex];
+        return new Vector3Int(node.x, node.y, 0);
     }
 
 
