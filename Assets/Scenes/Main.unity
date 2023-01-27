@@ -529,7 +529,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mapData:
-    MapSize: {x: 5, y: 5}
+    MapSize: {x: 10, y: 10}
     MazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}
   _gridManager: {fileID: 1673731655}
   _cameraFitter: {fileID: 519420030}
