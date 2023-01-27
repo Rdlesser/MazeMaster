@@ -41,6 +41,7 @@ public class GridManager : MonoBehaviour
         SetBoundaries();
         SetDoorways();
         SetExtraWalls();
+        
         CenterGameOnScreen();
         DispatchInitComplete();
     }
@@ -104,7 +105,7 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, _mapData.MapSize.y - 1, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(x, _mapData.MapSize.y - 1, NodeStatus.Wall);
+            UpdateGridStatus(x, _mapData.MapSize.y - 1, NodeStatus.Blocked);
         }
     }
 
@@ -113,7 +114,7 @@ public class GridManager : MonoBehaviour
         for (int x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(x, 0, NodeStatus.Wall);
+            UpdateGridStatus(x, 0, NodeStatus.Blocked);
         }
     }
 
@@ -122,7 +123,7 @@ public class GridManager : MonoBehaviour
         for (int y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(0, y, NodeStatus.Wall);
+            UpdateGridStatus(0, y, NodeStatus.Blocked);
         }
     }
 
@@ -132,7 +133,7 @@ public class GridManager : MonoBehaviour
         for (int y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(_mapData.MapSize.x - 1, y, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(_mapData.MapSize.x - 1, y, NodeStatus.Wall);
+            UpdateGridStatus(_mapData.MapSize.x - 1, y, NodeStatus.Blocked);
         }
     }
 
@@ -147,9 +148,9 @@ public class GridManager : MonoBehaviour
         } while (_exitPosition == _entrancePosition);
         
         SetTile(_doorwayTilemap, _entrancePosition, _tileDictionary[Entrance]);
-        UpdateGridStatus(_entrancePosition.x, _entrancePosition.y, NodeStatus.Doorway);
+        UpdateGridStatus(_entrancePosition.x, _entrancePosition.y, NodeStatus.Traversable);
         SetTile(_doorwayTilemap, _exitPosition, _tileDictionary[Exit]);
-        UpdateGridStatus(_exitPosition.x, _exitPosition.y, NodeStatus.Doorway);
+        UpdateGridStatus(_exitPosition.x, _exitPosition.y, NodeStatus.Traversable);
     }
 
     private void UpdateGridStatus(int x, int y, NodeStatus nodeStatus)
@@ -161,6 +162,7 @@ public class GridManager : MonoBehaviour
 
     private void SetExtraWalls()
     {
+        // TODO: improve using recursion
         for (int i = 0; i < _mapData.ExtraWalls; i++)
         {
             if (!TrySetRandomWall())
@@ -182,7 +184,7 @@ public class GridManager : MonoBehaviour
         var emptyPosition = (Vector3Int)randomEmptyPosition;
         
         SetTile(_wallsTilemap, emptyPosition, _tileDictionary[Wall]);
-        UpdateGridStatus(emptyPosition.x, emptyPosition.y, NodeStatus.Wall);
+        UpdateGridStatus(emptyPosition.x, emptyPosition.y, NodeStatus.Blocked);
         
         return true;
     }
@@ -205,10 +207,10 @@ public class GridManager : MonoBehaviour
         foreach (var index in indexList)
         {
             var node = _emptyPathNodes[index];
-            node.SetNodeStatus(NodeStatus.Wall);
+            node.SetNodeStatus(NodeStatus.Blocked);
             if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
             {
-                node.SetNodeStatus(NodeStatus.Free);
+                node.SetNodeStatus(NodeStatus.Empty);
                 return new Vector3Int(node.x, node.y, 0);
             }
         }

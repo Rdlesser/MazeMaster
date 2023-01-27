@@ -1,9 +1,9 @@
 ﻿
 public enum NodeStatus
 {
-    Free = 0,
-    Wall = 1,
-    Doorway = 2
+    Empty = 0,
+    Blocked = 1,
+    Traversable = 2
 }
 
 public class PathNode
@@ -24,7 +24,7 @@ public class PathNode
         _grid = grid;
         this.x = x;
         this.y = y;
-        nodeStatus = NodeStatus.Free;
+        nodeStatus = NodeStatus.Empty;
     }
 
     public void CalculateFCost()

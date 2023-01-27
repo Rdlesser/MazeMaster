@@ -84,14 +84,14 @@ public class Pathfinding
             _openList.Remove(currentNode);
             _closedList.Add(currentNode);
 
-            foreach (PathNode neighbourNode in getNeighbourList(currentNode))
+            foreach (PathNode neighbourNode in GetNeighbourList(currentNode))
             {
                 if (_closedList.Contains(neighbourNode))
                 {
                     continue;
                 }
 
-                if (neighbourNode.nodeStatus != NodeStatus.Free && neighbourNode.nodeStatus != NodeStatus.Doorway)
+                if (neighbourNode.nodeStatus != NodeStatus.Empty && neighbourNode.nodeStatus != NodeStatus.Traversable)
                 {
                     _closedList.Add(neighbourNode);
                     continue;
@@ -117,7 +117,7 @@ public class Pathfinding
     }
 
     // TODO: instead of dynamically identifying neighbours - precalculate neighbours as soon as we make the grid
-    private List<PathNode> getNeighbourList(PathNode currentNode)
+    private List<PathNode> GetNeighbourList(PathNode currentNode)
     {
         List<PathNode> neighboursList = new List<PathNode>();
 
