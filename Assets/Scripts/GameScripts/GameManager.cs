@@ -89,12 +89,14 @@ public class GameManager : MonoBehaviour
     {
         _isGameInProgress = false;
         Debug.Log("the player won");
+        GameEventDispatcher.DispatchGameEndEvent(true);
     }
 
     private void OnPlayerLost()
     {
         _isGameInProgress = false;
         Debug.Log("the player lost");
+        GameEventDispatcher.DispatchGameEndEvent(false);
     }
     
 

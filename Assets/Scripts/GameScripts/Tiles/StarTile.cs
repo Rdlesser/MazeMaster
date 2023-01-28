@@ -10,7 +10,6 @@ public class StarTile : MazeTile
 
     public override void Interact()
     {
-        Debug.LogError("Reached Star" + Index);
         GameEventDispatcher.DispatchPlayerReachedStarEvent(Index);
     }
     

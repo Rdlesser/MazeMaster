@@ -2,12 +2,15 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI _stepsCounter;
     [SerializeField] private TextMeshProUGUI _starsCounter;
+    [SerializeField] private GameObject _endGameScreen;
+    [SerializeField] private TextMeshProUGUI _victoryStatusText;
 
     private int _playerSteps;
     private int _playerStars;
@@ -15,8 +18,14 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         Init();
+        RegisterToGameEvents();
+    }
+
+    private void RegisterToGameEvents()
+    {
         GameEventDispatcher.PlayerTookStep += OnPlayerTookStep;
         GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+        GameEventDispatcher.GameEnd += OnGameEnd;
     }
 
     private void Init()
@@ -25,6 +34,7 @@ public class UIManager : MonoBehaviour
         _playerSteps = 0;
         UpdatePlayerStarsText();
         UpdatePlayerStepsText();
+        _endGameScreen.SetActive(false);
     }
 
     private void OnPlayerTookStep()
@@ -49,9 +59,28 @@ public class UIManager : MonoBehaviour
         _stepsCounter.SetText($"Steps: {_playerSteps}");
     }
 
-    private void OnDestroy()
+    private void OnGameEnd(bool isVictorious)
+    {
+        var victoryStatus = isVictorious ? "WIN" : "LOSE";
+        var victoryText = $"YOU {victoryStatus}";
+        _victoryStatusText.SetText(victoryText);
+        _endGameScreen.SetActive(true);
+    }
+
+    public void OnStartAgain()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    private void UnregisterGameEvents()
     {
         GameEventDispatcher.PlayerTookStep -= OnPlayerTookStep;
         GameEventDispatcher.PlayerReachedStar -= OnPlayerReachedStar;
+        GameEventDispatcher.GameEnd -= OnGameEnd;
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterGameEvents();
     }
 }

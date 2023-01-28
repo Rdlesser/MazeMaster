@@ -14,6 +14,10 @@ public static class GameEventDispatcher
 
     public static event PlayerTookStepEvent PlayerTookStep;
 
+    public delegate void GameEndEvent(bool isVictorious);
+
+    public static event GameEndEvent GameEnd;
+
     public static void DispatchPlayerAtExitEvent()
     {
         PlayerAtExit?.Invoke();
@@ -32,5 +36,10 @@ public static class GameEventDispatcher
     public static void DispatchPlayerTookStepEvent()
     {
         PlayerTookStep?.Invoke();
+    }
+
+    public static void DispatchGameEndEvent(bool isVictorious)
+    {
+        GameEnd?.Invoke(isVictorious);
     }
 }
