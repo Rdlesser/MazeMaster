@@ -529,6 +529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapData:
     MapSize: {x: 10, y: 10}
+    StarsAmount: 1
     ExtraWalls: 15
     LavaTileCount: 10
     MazeTilesList: {fileID: 11400000, guid: 93622562ee730c0449d941700a0f822c, type: 2}

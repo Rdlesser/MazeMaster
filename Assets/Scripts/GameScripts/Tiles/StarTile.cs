@@ -1,13 +1,17 @@
-﻿#if UNITY_EDITOR
+﻿
+using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 public class StarTile : MazeTile
 {
+    public int Index;
+
     public override void Interact()
     {
-        var position = gameObject.transform.position;
-        GameEventDispatcher.DispatchPlayerReachedStarEvent(position.x, position.y);
+        Debug.LogError("Reached Star" + Index);
+        GameEventDispatcher.DispatchPlayerReachedStarEvent(Index);
     }
     
 #if UNITY_EDITOR

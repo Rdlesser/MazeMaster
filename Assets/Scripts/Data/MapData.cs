@@ -5,6 +5,7 @@ using UnityEngine;
 public class MapData
 {
         public Vector2Int MapSize;
+        public int StarsAmount;
         public int ExtraWalls;
         public int LavaTileCount;
         public MazeTilesList MazeTilesList;

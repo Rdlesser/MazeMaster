@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour
         _gridManager.Init(mapData);
         GameEventDispatcher.PlayerAtExit += OnPlayerWon;
         GameEventDispatcher.PlayerOnLava += OnPlayerLost;
-        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
-        // _gridManager.PlayerReachedGoalAction += OnPlayerWon;
-        // _gridManager.PlayerDied += OnPlayerLost;
     }
 
     private void InitCameraFitter(MapData mapData)
@@ -99,16 +96,11 @@ public class GameManager : MonoBehaviour
         _isGameInProgress = false;
         Debug.Log("the player lost");
     }
-
-    private void OnPlayerReachedStar(float x, float y)
-    {
-        throw new System.NotImplementedException();
-    }
+    
 
     private void OnDestroy()
     {
         GameEventDispatcher.PlayerAtExit -= OnPlayerWon;
         GameEventDispatcher.PlayerOnLava -= OnPlayerLost;
-        GameEventDispatcher.PlayerReachedStar -= OnPlayerReachedStar;
     }
 }

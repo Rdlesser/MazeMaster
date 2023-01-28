@@ -7,7 +7,7 @@ public static class GameEventDispatcher
     public delegate void PlayerOnLavaEvent();
     public static event PlayerOnLavaEvent PlayerOnLava;
 
-    public delegate void PlayerReachedStarEvent(float x, float y);
+    public delegate void PlayerReachedStarEvent(int index);
     public static event PlayerReachedStarEvent PlayerReachedStar;
 
     public static void DispatchPlayerAtExitEvent()
@@ -20,8 +20,8 @@ public static class GameEventDispatcher
         PlayerOnLava?.Invoke();
     }
 
-    public static void DispatchPlayerReachedStarEvent(float x, float y)
+    public static void DispatchPlayerReachedStarEvent(int index)
     {
-        PlayerReachedStar?.Invoke(x, y);
+        PlayerReachedStar?.Invoke(index);
     }
 }

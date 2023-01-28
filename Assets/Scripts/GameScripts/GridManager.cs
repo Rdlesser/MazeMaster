@@ -23,13 +23,15 @@ public class GridManager : MonoBehaviour
     private Vector3Int _entrancePosition;
     private Vector3Int _exitPosition;
     private Vector3Int _playerPosition;
-    
+    private List<Vector3Int> _starPositions;
+
     private static readonly string Ground = "ground";
     private static readonly string Wall = "wall";
     private static readonly string Entrance = "entrance";
     private static readonly string Exit = "exit";
     private static readonly string Player = "player";
     private static readonly string Lava = "lava";
+    private static readonly string Star = "star";
 
     public Action MapInitted;
 
@@ -41,6 +43,7 @@ public class GridManager : MonoBehaviour
         InstantiatePathfinding();
         SetBoundaries();
         SetDoorways();
+        SetStars();
         SetExtraWalls();
         SetLavaTiles();
         CenterGameOnScreen();
@@ -160,6 +163,29 @@ public class GridManager : MonoBehaviour
         gridObject.NodeStatus = nodeStatus;
         _emptyPathNodes.Remove(gridObject);
     }
+    
+    private void SetStars()
+    {
+        _starPositions = new List<Vector3Int>();
+        for (int i = 0; i < _mapData.StarsAmount; i++)
+        {
+            var position = GetRandomEmptyPosition();
+            _starPositions.Add(position);
+            var tile = (StarTile) _tileDictionary[Star];
+            tile.Index = i;
+            SetTile(_overlayTilemap, position, tile);
+            UpdateGridStatus(position.x, position.y, NodeStatus.Traversable);
+        }
+
+        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+    }
+
+    private void OnPlayerReachedStar(int index)
+    {
+        var position = _starPositions[index];
+        SetTile(_overlayTilemap, position, null);
+        UpdateGridStatus(position.x, position.y, NodeStatus.Empty);
+    }
 
     private void SetExtraWalls()
     {
@@ -230,6 +256,14 @@ public class GridManager : MonoBehaviour
         if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
         {
             ans = true;
+            foreach (var starPosition in _starPositions)
+            {
+                if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, starPosition.x, starPosition.y) == null)
+                {
+                    ans = false;
+                    break;
+                }
+            }
         }
         
         node.SetNodeStatus(NodeStatus.Empty);
@@ -315,5 +349,6 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         MapInitted = null;
+        GameEventDispatcher.PlayerReachedStar -= OnPlayerReachedStar;
     }
 }
