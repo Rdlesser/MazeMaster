@@ -17,6 +17,10 @@ public static class GameEventDispatcher
     public delegate void GameEndEvent(bool isVictorious);
 
     public static event GameEndEvent GameEnd;
+    
+    public delegate void StartAgainEvent();
+
+    public static event StartAgainEvent StartAgain;
 
     public static void DispatchPlayerAtExitEvent()
     {
@@ -41,5 +45,10 @@ public static class GameEventDispatcher
     public static void DispatchGameEndEvent(bool isVictorious)
     {
         GameEnd?.Invoke(isVictorious);
+    }
+
+    public static void DispatchStartAgainEvent()
+    {
+        StartAgain?.Invoke();
     }
 }

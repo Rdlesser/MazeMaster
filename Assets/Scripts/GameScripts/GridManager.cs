@@ -108,8 +108,7 @@ public class GridManager : MonoBehaviour
     {
         for (var x = 0; x < _mapData.MapSize.x; x++)
         {
-            SetTile(_wallsTilemap, new Vector3Int(x, _mapData.MapSize.y - 1, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(x, _mapData.MapSize.y - 1, NodeStatus.Blocked);
+            SetTileAndUpdateGrid(_wallsTilemap, new Vector3Int(x, _mapData.MapSize.y - 1, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -117,8 +116,7 @@ public class GridManager : MonoBehaviour
     {
         for (var x = 0; x < _mapData.MapSize.x; x++)
         {
-            SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(x, 0, NodeStatus.Blocked);
+            SetTileAndUpdateGrid(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -126,8 +124,7 @@ public class GridManager : MonoBehaviour
     {
         for (var y = 0; y < _mapData.MapSize.y; y++)
         {
-            SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(0, y, NodeStatus.Blocked);
+            SetTileAndUpdateGrid(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
         }
     }
 
@@ -136,9 +133,14 @@ public class GridManager : MonoBehaviour
         
         for (var y = 0; y < _mapData.MapSize.y; y++)
         {
-            SetTile(_wallsTilemap, new Vector3Int(_mapData.MapSize.x - 1, y, 0), _tileDictionary[Wall]);
-            UpdateGridStatus(_mapData.MapSize.x - 1, y, NodeStatus.Blocked);
+            SetTileAndUpdateGrid(_wallsTilemap, new Vector3Int(_mapData.MapSize.x - 1, y, 0), _tileDictionary[Wall]);
         }
+    }
+
+    private void SetTileAndUpdateGrid(Tilemap tilemap, Vector3Int position, Tile tile, NodeStatus nodeStatus = NodeStatus.Blocked)
+    {
+        SetTile(tilemap, position, tile);
+        UpdateGridStatus(position.x, position.y, nodeStatus);
     }
 
     private void SetDoorways()
@@ -151,10 +153,8 @@ public class GridManager : MonoBehaviour
 
         } while (_exitPosition == _entrancePosition);
         
-        SetTile(_overlayTilemap, _entrancePosition, _tileDictionary[Entrance]);
-        UpdateGridStatus(_entrancePosition.x, _entrancePosition.y, NodeStatus.Traversable);
-        SetTile(_overlayTilemap, _exitPosition, _tileDictionary[Exit]);
-        UpdateGridStatus(_exitPosition.x, _exitPosition.y, NodeStatus.Traversable);
+        SetTileAndUpdateGrid(_overlayTilemap, _entrancePosition, _tileDictionary[Entrance], NodeStatus.Traversable);
+        SetTileAndUpdateGrid(_overlayTilemap, _exitPosition, _tileDictionary[Exit], NodeStatus.Traversable );
     }
 
     private void UpdateGridStatus(int x, int y, NodeStatus nodeStatus)
@@ -174,8 +174,7 @@ public class GridManager : MonoBehaviour
             // TODO: Find a way to generalize the star process such that I won't need a separate StarTile asset for each star
             var tile = (StarTile) _tileDictionary[$"{Star}{i+1}"];
             tile.Index = i;
-            SetTile(_overlayTilemap, position, tile);
-            UpdateGridStatus(position.x, position.y, NodeStatus.Traversable);
+            SetTileAndUpdateGrid(_overlayTilemap, position, tile, NodeStatus.Traversable);
         }
 
         GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
@@ -184,8 +183,7 @@ public class GridManager : MonoBehaviour
     private void OnPlayerReachedStar(int index)
     {
         var position = _starPositions[index];
-        SetTile(_overlayTilemap, position, null);
-        UpdateGridStatus(position.x, position.y, NodeStatus.Empty);
+        SetTileAndUpdateGrid(_overlayTilemap, position, null, NodeStatus.Empty);
     }
 
     private void SetExtraWalls()
@@ -223,9 +221,8 @@ public class GridManager : MonoBehaviour
 
         var emptyPosition = (Vector3Int)randomEmptyPosition;
         
-        SetTile(tilemap, emptyPosition, tile);
-        UpdateGridStatus(emptyPosition.x, emptyPosition.y, NodeStatus.Blocked);
-        
+        SetTileAndUpdateGrid(tilemap, emptyPosition, tile);
+
         return true;
     }
 

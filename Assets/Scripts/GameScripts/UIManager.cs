@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
 
     public void OnStartAgain()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameEventDispatcher.DispatchStartAgainEvent();
     }
 
     private void UnregisterGameEvents()

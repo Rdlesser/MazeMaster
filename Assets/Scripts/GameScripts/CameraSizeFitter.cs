@@ -8,7 +8,7 @@ public class CameraSizeFitter : MonoBehaviour
         {
                 FitCamera(mapData.MapSize);
         }
-        
+
         private void FitCamera(Vector2Int mapSize)
         {
                 if (Camera.main == null)

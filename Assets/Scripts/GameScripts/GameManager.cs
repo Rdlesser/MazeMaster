@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
         GameEventDispatcher.PlayerAtExit += OnPlayerWon;
         GameEventDispatcher.PlayerOnLava += OnPlayerLost;
         GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+        GameEventDispatcher.StartAgain += RestartGame;
     }
 
     private void OnPlayerReachedStar(int index)
@@ -117,11 +119,17 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
     private void UnregisterFromGameEvents()
     {
         GameEventDispatcher.PlayerAtExit -= OnPlayerWon;
         GameEventDispatcher.PlayerOnLava -= OnPlayerLost;
-        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+        GameEventDispatcher.PlayerReachedStar -= OnPlayerReachedStar;
+        GameEventDispatcher.StartAgain -= RestartGame;
     }
 
     private void OnDestroy()
