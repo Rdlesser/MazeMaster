@@ -1,10 +1,9 @@
-﻿
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[CustomEditor(typeof(MazeTile))]
-public class MazeTileEditor : Editor
+[CustomEditor(typeof(ExitTile))]
+public class ExitTileEditor : Editor
 {
     public override void OnInspectorGUI()
     {
