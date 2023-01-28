@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,14 +23,18 @@ public class GameManager : MonoBehaviour
 
     private void StartGame()
     {
+        _gridManager.MapInitted -= StartGame;
         SpawnPlayer();
     }
 
     private void InitMapManager(MapData mapData)
     {
         _gridManager.Init(mapData);
-        _gridManager.PlayerReachedGoalAction += OnPlayerWon;
-        _gridManager.PlayerDied += OnPlayerLost;
+        GameEventDispatcher.PlayerAtExit += OnPlayerWon;
+        GameEventDispatcher.PlayerOnLava += OnPlayerLost;
+        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+        // _gridManager.PlayerReachedGoalAction += OnPlayerWon;
+        // _gridManager.PlayerDied += OnPlayerLost;
     }
 
     private void InitCameraFitter(MapData mapData)
@@ -93,5 +98,17 @@ public class GameManager : MonoBehaviour
     {
         _isGameInProgress = false;
         Debug.Log("the player lost");
+    }
+
+    private void OnPlayerReachedStar(float x, float y)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void OnDestroy()
+    {
+        GameEventDispatcher.PlayerAtExit -= OnPlayerWon;
+        GameEventDispatcher.PlayerOnLava -= OnPlayerLost;
+        GameEventDispatcher.PlayerReachedStar -= OnPlayerReachedStar;
     }
 }

@@ -18,7 +18,7 @@ public class GridManager : MonoBehaviour
     private Grid<PathNode> _grid;
     private List<PathNode> _emptyPathNodes;
 
-    private readonly Dictionary<string, TileBase> _tileDictionary = new Dictionary<string, TileBase>();
+    private readonly Dictionary<string, Tile> _tileDictionary = new Dictionary<string, Tile>();
     
     private Vector3Int _entrancePosition;
     private Vector3Int _exitPosition;
@@ -32,8 +32,8 @@ public class GridManager : MonoBehaviour
     private static readonly string Lava = "lava";
 
     public Action MapInitted;
-    public Action PlayerReachedGoalAction;
-    public Action PlayerDied;
+    // public Action PlayerReachedGoalAction;
+    // public Action PlayerDied;
 
     public void Init(MapData mapData)
     {
@@ -188,7 +188,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool  TrySetTileAtRandom(Tilemap tilemap, TileBase tile)
+    private bool  TrySetTileAtRandom(Tilemap tilemap, Tile tile)
     {
         var randomEmptyPosition = GetRandomNonBlockingEmptyPosition();
         if (randomEmptyPosition == null)
@@ -204,9 +204,9 @@ public class GridManager : MonoBehaviour
         return true;
     }
 
-    private void SetTile(Tilemap tilemap, Vector3Int tilePosition, TileBase tileBase)
+    private void SetTile(Tilemap tilemap, Vector3Int tilePosition, Tile tile)
     {
-        tilemap.SetTile(tilePosition, tileBase);
+        tilemap.SetTile(tilePosition, tile);
     }
 
     private Vector3Int? GetRandomNonBlockingEmptyPosition()
@@ -281,27 +281,38 @@ public class GridManager : MonoBehaviour
         }
         
         UpdatePlayerPosition(movePosition);
+        InteractWithTile();
 
-        if (IsPlayerAtExit())
-        {
-            OnPlayerReachedGoal();
-        }
-
-        if (IsPlayerOnLava())
-        {
-            OnPlayerDied();
-        }
+        // if (IsPlayerAtExit())
+        // {
+        //     OnPlayerReachedGoal();
+        // }
+        //
+        // if (IsPlayerOnLava())
+        // {
+        //     OnPlayerDied();
+        // }
     }
 
-    private void OnPlayerDied()
+    // private void OnPlayerDied()
+    // {
+    //     PlayerDied?.Invoke();
+    // }
+
+    private void InteractWithTile()
     {
-        PlayerDied?.Invoke();
+        var tile = _overlayTilemap.GetTile(_playerPosition);
+        var mazeTile = (MazeTile)tile;
+        if (mazeTile != null)
+        {
+            mazeTile.Interact();
+        }
     }
 
     private bool IsPlayerOnLava()
     {
         var tile = _overlayTilemap.GetTile(_playerPosition);
-        
+
         if (tile != null && tile.name.Equals(Lava, StringComparison.OrdinalIgnoreCase))
         {
             return true;
@@ -317,10 +328,10 @@ public class GridManager : MonoBehaviour
         SetTile(_playerTilemap, _playerPosition, _tileDictionary[Player]);
     }
 
-    private void OnPlayerReachedGoal()
-    {
-        PlayerReachedGoalAction?.Invoke();
-    }
+    // private void OnPlayerReachedGoal()
+    // {
+    //     PlayerReachedGoalAction?.Invoke();
+    // }
 
     private bool IsPlayerAtExit()
     {
@@ -343,7 +354,7 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         MapInitted = null;
-        PlayerReachedGoalAction = null;
-        PlayerDied = null;
+        // PlayerReachedGoalAction = null;
+        // PlayerDied = null;
     }
 }

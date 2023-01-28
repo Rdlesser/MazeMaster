@@ -13,9 +13,9 @@ public class LavaTile : MazeTile
     
 #if UNITY_EDITOR
     [MenuItem("Assets/Create/Tiles/Lava")]
-    public static void CreateMyTile()
+    public new static void CreateMyTile()
     {
-        string path = EditorUtility.SaveFilePanelInProject("Save My Tile", "LavaTile", "Asset", "Save My Tile", "Assets/Tiles");
+        string path = EditorUtility.SaveFilePanelInProject("Save Tile", "LavaTile", "Asset", "Save Tile", "Assets/Tiles");
         if (path == "")
             return;
         AssetDatabase.CreateAsset(CreateInstance<LavaTile>(), path);

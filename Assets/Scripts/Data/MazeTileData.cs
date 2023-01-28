@@ -6,5 +6,5 @@ using UnityEngine.Tilemaps;
 public class MazeTileData
 {
     public string Name;
-    public TileBase Tile;
+    public Tile Tile;
 }

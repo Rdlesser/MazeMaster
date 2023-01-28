@@ -1,5 +1,7 @@
-﻿
-using UnityEngine;
+﻿#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 using UnityEngine.Tilemaps;
 
 public class MazeTile : Tile
@@ -9,13 +11,14 @@ public class MazeTile : Tile
         
     }
     
-    public override void RefreshTile(Vector3Int position, ITilemap tilemap)
+#if UNITY_EDITOR
+    [MenuItem("Assets/Create/Tiles/MazeTile")]
+    public static void CreateMyTile()
     {
-        base.RefreshTile(position, tilemap);
+        string path = EditorUtility.SaveFilePanelInProject("Save Tile", "MazeTile", "Asset", "Save Tile", "Assets/Tiles");
+        if (path == "")
+            return;
+        AssetDatabase.CreateAsset(CreateInstance<LavaTile>(), path);
     }
-
-    public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
-    {
-        base.GetTileData(position, tilemap, ref tileData);
-    }
+#endif
 }
