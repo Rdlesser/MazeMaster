@@ -171,7 +171,8 @@ public class GridManager : MonoBehaviour
         {
             var position = GetRandomEmptyPosition();
             _starPositions.Add(position);
-            var tile = (StarTile) _tileDictionary[Star];
+            // TODO: Find a way to generalize the star process such that I won't need a separate StarTile asset for each star
+            var tile = (StarTile) _tileDictionary[$"{Star}{i+1}"];
             tile.Index = i;
             SetTile(_overlayTilemap, position, tile);
             UpdateGridStatus(position.x, position.y, NodeStatus.Traversable);
