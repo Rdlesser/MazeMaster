@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraSizeFitter _cameraFitter;
 
     private bool _isGameInProgress = false;
+    private int _starsCollected;
     
     private void Awake()
     {
@@ -18,7 +19,20 @@ public class GameManager : MonoBehaviour
             _gridManager.MapInitted += StartGame;
             InitMapManager(_mapData);
             InitCameraFitter(_mapData);
+            RegisterToGameEvents();
         }
+    }
+
+    private void RegisterToGameEvents()
+    {
+        GameEventDispatcher.PlayerAtExit += OnPlayerWon;
+        GameEventDispatcher.PlayerOnLava += OnPlayerLost;
+        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+    }
+
+    private void OnPlayerReachedStar(int index)
+    {
+        _starsCollected++;
     }
 
     private void StartGame()
@@ -30,8 +44,6 @@ public class GameManager : MonoBehaviour
     private void InitMapManager(MapData mapData)
     {
         _gridManager.Init(mapData);
-        GameEventDispatcher.PlayerAtExit += OnPlayerWon;
-        GameEventDispatcher.PlayerOnLava += OnPlayerLost;
     }
 
     private void InitCameraFitter(MapData mapData)
@@ -87,6 +99,11 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerWon()
     {
+        if (_starsCollected < _mapData.StarsAmount)
+        {
+            return;
+        }
+        
         _isGameInProgress = false;
         Debug.Log("the player won");
         GameEventDispatcher.DispatchGameEndEvent(true);
@@ -98,11 +115,17 @@ public class GameManager : MonoBehaviour
         Debug.Log("the player lost");
         GameEventDispatcher.DispatchGameEndEvent(false);
     }
-    
 
-    private void OnDestroy()
+
+    private void UnregisterFromGameEvents()
     {
         GameEventDispatcher.PlayerAtExit -= OnPlayerWon;
         GameEventDispatcher.PlayerOnLava -= OnPlayerLost;
+        GameEventDispatcher.PlayerReachedStar += OnPlayerReachedStar;
+    }
+
+    private void OnDestroy()
+    {
+        UnregisterFromGameEvents();
     }
 }

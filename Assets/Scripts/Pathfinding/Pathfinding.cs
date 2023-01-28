@@ -84,7 +84,7 @@ public class Pathfinding
                     continue;
                 }
 
-                if (neighbourNode.NodeStatus != NodeStatus.Empty && neighbourNode.NodeStatus != NodeStatus.Traversable)
+                if (neighbourNode.NodeStatus == NodeStatus.Blocked)
                 {
                     _closedList.Add(neighbourNode);
                     continue;
