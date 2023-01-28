@@ -22,8 +22,8 @@ public class PathNode
     public PathNode(Grid<PathNode> grid, int x, int y)
     {
         _grid = grid;
-        this.X = x;
-        this.Y = y;
+        X = x;
+        Y = y;
         NodeStatus = NodeStatus.Empty;
     }
 
