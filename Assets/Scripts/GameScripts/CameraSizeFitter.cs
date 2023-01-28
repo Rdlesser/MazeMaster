@@ -1,15 +1,12 @@
 ﻿
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class CameraSizeFitter : MonoBehaviour
 {
-        [SerializeField] private Tilemap _tilemap;
-        
-        
-        public void Init(MapData _mapData)
+
+        public void Init(MapData mapData)
         {
-                FitCamera(_mapData.MapSize);
+                FitCamera(mapData.MapSize);
         }
         
         private void FitCamera(Vector2Int mapSize)

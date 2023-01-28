@@ -159,7 +159,7 @@ public class GridManager : MonoBehaviour
     private void UpdateGridStatus(int x, int y, NodeStatus nodeStatus)
     {
         var gridObject = _grid.GetGridObject(x, y);
-        gridObject.nodeStatus = nodeStatus;
+        gridObject.NodeStatus = nodeStatus;
         _emptyPathNodes.Remove(gridObject);
     }
 
@@ -218,7 +218,7 @@ public class GridManager : MonoBehaviour
             var node = _emptyPathNodes[index];
             if (IsPossibleBlockingPosition(node))
             {
-                return new Vector3Int(node.x, node.y, 0);
+                return new Vector3Int(node.X, node.Y, 0);
             }
         }
 
@@ -255,7 +255,7 @@ public class GridManager : MonoBehaviour
     {
         var randomIndex = Random.Range(0, _emptyPathNodes.Count);
         var node = _emptyPathNodes[randomIndex];
-        return new Vector3Int(node.x, node.y, 0);
+        return new Vector3Int(node.X, node.Y, 0);
     }
 
 

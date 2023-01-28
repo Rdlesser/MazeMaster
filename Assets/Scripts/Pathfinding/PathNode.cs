@@ -8,38 +8,38 @@ public enum NodeStatus
 
 public class PathNode
 {
-    private Grid<PathNode> _grid;
-    public int x;
-    public int y;
+    private readonly Grid<PathNode> _grid;
+    public readonly int X;
+    public readonly int Y;
 
-    public int gCost;
-    public int hCost;
-    public int fCost;
+    public int GCost;
+    public int HCost;
+    public int FCost;
 
-    public NodeStatus nodeStatus;
-    public PathNode cameFromNode;
+    public NodeStatus NodeStatus;
+    public PathNode CameFromNode;
     
     public PathNode(Grid<PathNode> grid, int x, int y)
     {
         _grid = grid;
-        this.x = x;
-        this.y = y;
-        nodeStatus = NodeStatus.Empty;
+        this.X = x;
+        this.Y = y;
+        NodeStatus = NodeStatus.Empty;
     }
 
     public void CalculateFCost()
     {
-        fCost = gCost + hCost;
+        FCost = GCost + HCost;
     }
 
     public void SetNodeStatus(NodeStatus newNodeStatus)
     {
-        nodeStatus = newNodeStatus;
-        _grid.TriggerGridObjectChanged(x, y);
+        NodeStatus = newNodeStatus;
+        _grid.TriggerGridObjectChanged(X, Y);
     }
 
     public override string ToString()
     {
-        return x + "," + y;
+        return X + "," + Y;
     }
 }
