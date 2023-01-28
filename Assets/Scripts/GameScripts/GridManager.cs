@@ -66,9 +66,9 @@ public class GridManager : MonoBehaviour
 
     private void SetGround()
     {
-        for (int i = 0; i < _mapData.MapSize.x; i++)
+        for (var i = 0; i < _mapData.MapSize.x; i++)
         {
-            for (int j = 0; j < _mapData.MapSize.y; j++)
+            for (var j = 0; j < _mapData.MapSize.y; j++)
             {
                 SetTile(_groundTilemap, new Vector3Int(i, j, 0), _tileDictionary[Ground]);
             }
@@ -86,9 +86,9 @@ public class GridManager : MonoBehaviour
     private void InstantiateFreeNodesList()
     {
         _emptyPathNodes = new List<PathNode>();
-        for (int x = 0; x < _grid.GetWidth(); x++)
+        for (var x = 0; x < _grid.GetWidth(); x++)
         {
-            for (int y = 0; y < _grid.GetHeight(); y++)
+            for (var y = 0; y < _grid.GetHeight(); y++)
             {
                 _emptyPathNodes.Add(_grid.GetGridObject(x, y));
             }
@@ -105,7 +105,7 @@ public class GridManager : MonoBehaviour
 
     private void SetUpperBoundaries()
     {
-        for (int x = 0; x < _mapData.MapSize.x; x++)
+        for (var x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, _mapData.MapSize.y - 1, 0), _tileDictionary[Wall]);
             UpdateGridStatus(x, _mapData.MapSize.y - 1, NodeStatus.Blocked);
@@ -114,7 +114,7 @@ public class GridManager : MonoBehaviour
 
     private void SetLowerBoundaries()
     {
-        for (int x = 0; x < _mapData.MapSize.x; x++)
+        for (var x = 0; x < _mapData.MapSize.x; x++)
         {
             SetTile(_wallsTilemap, new Vector3Int(x, 0, 0), _tileDictionary[Wall]);
             UpdateGridStatus(x, 0, NodeStatus.Blocked);
@@ -123,7 +123,7 @@ public class GridManager : MonoBehaviour
 
     private void SetLeftBoundaries()
     {
-        for (int y = 0; y < _mapData.MapSize.y; y++)
+        for (var y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(0, y, 0), _tileDictionary[Wall]);
             UpdateGridStatus(0, y, NodeStatus.Blocked);
@@ -133,7 +133,7 @@ public class GridManager : MonoBehaviour
     private void SetRightBoundaries()
     {
         
-        for (int y = 0; y < _mapData.MapSize.y; y++)
+        for (var y = 0; y < _mapData.MapSize.y; y++)
         {
             SetTile(_wallsTilemap, new Vector3Int(_mapData.MapSize.x - 1, y, 0), _tileDictionary[Wall]);
             UpdateGridStatus(_mapData.MapSize.x - 1, y, NodeStatus.Blocked);
@@ -166,7 +166,7 @@ public class GridManager : MonoBehaviour
     private void SetExtraWalls()
     {
         // TODO: this is a greedy algorithm and can be improved using recursion
-        for (int i = 0; i < _mapData.ExtraWalls; i++)
+        for (var i = 0; i < _mapData.ExtraWalls; i++)
         {
             if (!TrySetTileAtRandom(_wallsTilemap, _tileDictionary[Wall]))
             {
@@ -179,7 +179,7 @@ public class GridManager : MonoBehaviour
     private void SetLavaTiles()
     {
         // TODO: this is a greedy algorithm and can be improved using recursion
-        for (int i = 0; i < _mapData.LavaTileCount; i++)
+        for (var i = 0; i < _mapData.LavaTileCount; i++)
         {
             if (!TrySetTileAtRandom(_overlayTilemap, _tileDictionary[Lava]))
             {
@@ -211,7 +211,7 @@ public class GridManager : MonoBehaviour
 
     private Vector3Int? GetRandomNonBlockingEmptyPosition()
     {
-        List<int> indexList = GetShuffledIndexList();
+        var indexList = GetShuffledIndexList();
 
         foreach (var index in indexList)
         {
@@ -227,7 +227,7 @@ public class GridManager : MonoBehaviour
 
     private bool IsPossibleBlockingPosition(PathNode node)
     {
-        bool ans = false;
+        var ans = false;
         node.SetNodeStatus(NodeStatus.Blocked);
         if (_pathfinding.FindPath(_entrancePosition.x, _entrancePosition.y, _exitPosition.x, _exitPosition.y) != null)
         {
@@ -240,8 +240,8 @@ public class GridManager : MonoBehaviour
 
     private List<int> GetShuffledIndexList()
     {
-        List<int> indexList = new List<int>();
-        for (int i = 0; i < _emptyPathNodes.Count; i++)
+        var indexList = new List<int>();
+        for (var i = 0; i < _emptyPathNodes.Count; i++)
         {
             indexList.Add(i);
         }

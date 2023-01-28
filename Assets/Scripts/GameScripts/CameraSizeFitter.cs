@@ -16,7 +16,7 @@ public class CameraSizeFitter : MonoBehaviour
                         return;
                 }
                 
-                float screenRatio = (float)Screen.width / Screen.height;
+                var screenRatio = (float)Screen.width / Screen.height;
 
                 var targetRatio = mapSize.x / (float) mapSize.y;
 
@@ -26,7 +26,7 @@ public class CameraSizeFitter : MonoBehaviour
                 }
                 else
                 {
-                        float differenceInSize = targetRatio / screenRatio;
+                        var differenceInSize = targetRatio / screenRatio;
                         Camera.main.orthographicSize = mapSize.y / 2f * differenceInSize;
                 }
         }

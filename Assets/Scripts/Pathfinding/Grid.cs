@@ -27,9 +27,9 @@ public class Grid<TGridObject>
         _gridArray = new TGridObject[width, height];
         _debugTextArray = new TextMesh[width, height];
 
-        for (int x = 0; x < _gridArray.GetLength(0); x++)
+        for (var x = 0; x < _gridArray.GetLength(0); x++)
         {
-            for (int y = 0; y < _gridArray.GetLength(1); y++)
+            for (var y = 0; y < _gridArray.GetLength(1); y++)
             {
                 _gridArray[x, y] = createGridObject(this, x, y);
             }

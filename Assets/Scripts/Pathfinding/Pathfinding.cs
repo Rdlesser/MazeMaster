@@ -7,13 +7,14 @@ public class Pathfinding
 {
     private const int MOVE_STRAIGHT_COST = 10;
     private readonly Grid<PathNode> _grid;
+    // TODO: Improvement - create a class for priority queue and use that instead
     private List<PathNode> _openList;
     private List<PathNode> _closedList;
 
     public Pathfinding(int width, int height)
     {
         _grid = new Grid<PathNode>(width, height, 10f, Vector3.zero,
-            (g, x, y) => new PathNode(g, x, y));
+            (grid, x, y) => new PathNode(grid, x, y));
     }
 
     public Grid<PathNode> GetGrid()
@@ -23,17 +24,17 @@ public class Pathfinding
 
     public List<Vector3> FindPath(Vector3 startWorldPosition, Vector3 endWorldPosition)
     {
-        _grid.GetXY(startWorldPosition, out int startX, out int startY);
-        _grid.GetXY(endWorldPosition, out int endX, out int endY);
+        _grid.GetXY(startWorldPosition, out var startX, out var startY);
+        _grid.GetXY(endWorldPosition, out var endX, out var endY);
 
-        List<PathNode> path = FindPath(startX, startY, endX, endY);
+        var path = FindPath(startX, startY, endX, endY);
 
         if (path == null)
         {
             return null;    
         }
 
-        List<Vector3> vectorPath = new List<Vector3>();
+        var vectorPath = new List<Vector3>();
         foreach (var pathNode in path)
         {
             vectorPath.Add(new Vector3(pathNode.X, pathNode.Y) * _grid.GetCellSize() + Vector3.one * _grid.GetCellSize() * 0.5f);
@@ -44,17 +45,17 @@ public class Pathfinding
 
     public List<PathNode> FindPath(int startX, int startY, int endX, int endY)
     {
-        PathNode startNode = _grid.GetGridObject(startX, startY);
-        PathNode endNode = _grid.GetGridObject(endX, endY);
+        var startNode = _grid.GetGridObject(startX, startY);
+        var endNode = _grid.GetGridObject(endX, endY);
         
         _openList = new List<PathNode> { startNode };
         _closedList = new List<PathNode>();
 
-        for (int x = 0; x < _grid.GetWidth(); x++)
+        for (var x = 0; x < _grid.GetWidth(); x++)
         {
-            for (int y = 0; y < _grid.GetHeight(); y++)
+            for (var y = 0; y < _grid.GetHeight(); y++)
             {
-                PathNode pathNode = _grid.GetGridObject(x, y);
+                var pathNode = _grid.GetGridObject(x, y);
                 pathNode.GCost = int.MaxValue;
                 pathNode.CalculateFCost();
                 pathNode.CameFromNode = null;
@@ -67,7 +68,7 @@ public class Pathfinding
 
         while (_openList.Count > 0)
         {
-            PathNode currentNode = GetLowestFCostNode(_openList);
+            var currentNode = GetLowestFCostNode(_openList);
             if (currentNode == endNode)
             {
                 return CalculatePath(endNode);
@@ -76,7 +77,7 @@ public class Pathfinding
             _openList.Remove(currentNode);
             _closedList.Add(currentNode);
 
-            foreach (PathNode neighbourNode in GetNeighbourList(currentNode))
+            foreach (var neighbourNode in GetNeighbourList(currentNode))
             {
                 if (_closedList.Contains(neighbourNode))
                 {
@@ -89,7 +90,7 @@ public class Pathfinding
                     continue;
                 }
 
-                int tentativeGCost = currentNode.GCost + CalculateDistanceCost(currentNode, neighbourNode);
+                var tentativeGCost = currentNode.GCost + CalculateDistanceCost(currentNode, neighbourNode);
                 if (tentativeGCost < neighbourNode.GCost)
                 {
                     neighbourNode.CameFromNode = currentNode;
@@ -111,7 +112,7 @@ public class Pathfinding
     // TODO: improvement - instead of dynamically identifying neighbours - precalculate neighbours as soon as we make the grid
     private List<PathNode> GetNeighbourList(PathNode currentNode)
     {
-        List<PathNode> neighboursList = new List<PathNode>();
+        var neighboursList = new List<PathNode>();
 
         if (currentNode.X - 1 >= 0)
         {
@@ -143,8 +144,8 @@ public class Pathfinding
 
     private List<PathNode> CalculatePath(PathNode endNode)
     {
-        List<PathNode> path = new List<PathNode> { endNode };
-        PathNode currentNode = endNode;
+        var path = new List<PathNode> { endNode };
+        var currentNode = endNode;
 
         while (currentNode.CameFromNode != null)
         {
@@ -158,16 +159,16 @@ public class Pathfinding
 
     private int CalculateDistanceCost(PathNode a, PathNode b)
     {
-        int xDistance = Mathf.Abs(a.X - b.X);
-        int yDistance = Mathf.Abs(a.Y - b.Y);
+        var xDistance = Mathf.Abs(a.X - b.X);
+        var yDistance = Mathf.Abs(a.Y - b.Y);
         return MOVE_STRAIGHT_COST * (xDistance + yDistance);
     }
 
     // TODO: can performance be improved using binary search?
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
     {
-        PathNode lowestFCostNode = pathNodeList[0];
-        for (int i = 0; i < pathNodeList.Count; i++)
+        var lowestFCostNode = pathNodeList[0];
+        for (var i = 0; i < pathNodeList.Count; i++)
         {
             if (pathNodeList[i].FCost < lowestFCostNode.FCost)
             {
