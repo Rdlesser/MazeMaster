@@ -6,7 +6,6 @@ using UnityEngine;
 public class Pathfinding
 {
     private const int MOVE_STRAIGHT_COST = 10;
-
     private readonly Grid<PathNode> _grid;
     private List<PathNode> _openList;
     private List<PathNode> _closedList;
@@ -164,7 +163,7 @@ public class Pathfinding
         return MOVE_STRAIGHT_COST * (xDistance + yDistance);
     }
 
-    // TODO: performance can be improved using binary search
+    // TODO: can performance be improved using binary search?
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
     {
         PathNode lowestFCostNode = pathNodeList[0];
