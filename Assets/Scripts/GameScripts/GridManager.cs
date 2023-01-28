@@ -32,8 +32,6 @@ public class GridManager : MonoBehaviour
     private static readonly string Lava = "lava";
 
     public Action MapInitted;
-    // public Action PlayerReachedGoalAction;
-    // public Action PlayerDied;
 
     public void Init(MapData mapData)
     {
@@ -282,22 +280,7 @@ public class GridManager : MonoBehaviour
         
         UpdatePlayerPosition(movePosition);
         InteractWithTile();
-
-        // if (IsPlayerAtExit())
-        // {
-        //     OnPlayerReachedGoal();
-        // }
-        //
-        // if (IsPlayerOnLava())
-        // {
-        //     OnPlayerDied();
-        // }
     }
-
-    // private void OnPlayerDied()
-    // {
-    //     PlayerDied?.Invoke();
-    // }
 
     private void InteractWithTile()
     {
@@ -309,35 +292,13 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private bool IsPlayerOnLava()
-    {
-        var tile = _overlayTilemap.GetTile(_playerPosition);
-
-        if (tile != null && tile.name.Equals(Lava, StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private void UpdatePlayerPosition(Vector3Int movePosition)
     {
         SetTile(_playerTilemap, _playerPosition, null);
         _playerPosition = movePosition;
         SetTile(_playerTilemap, _playerPosition, _tileDictionary[Player]);
     }
-
-    // private void OnPlayerReachedGoal()
-    // {
-    //     PlayerReachedGoalAction?.Invoke();
-    // }
-
-    private bool IsPlayerAtExit()
-    {
-        return _playerPosition == _exitPosition;
-    }
-
+    
     private void DispatchInitComplete()
     {
         MapInitted?.Invoke();
@@ -354,7 +315,5 @@ public class GridManager : MonoBehaviour
     private void OnDestroy()
     {
         MapInitted = null;
-        // PlayerReachedGoalAction = null;
-        // PlayerDied = null;
     }
 }
