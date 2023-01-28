@@ -163,8 +163,7 @@ public class Pathfinding
         var yDistance = Mathf.Abs(a.Y - b.Y);
         return MOVE_STRAIGHT_COST * (xDistance + yDistance);
     }
-
-    // TODO: can performance be improved using binary search?
+    
     private PathNode GetLowestFCostNode(List<PathNode> pathNodeList)
     {
         var lowestFCostNode = pathNodeList[0];
