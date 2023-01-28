@@ -402,6 +402,7 @@ GameObject:
   - component: {fileID: 1280406862}
   - component: {fileID: 1280406861}
   - component: {fileID: 1280406860}
+  - component: {fileID: 1280406864}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -491,6 +492,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1280406864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1280406859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e738c5450f75436d831ecfd574544c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stepsCounter: {fileID: 2034632834}
+  _starsCounter: {fileID: 1834487490}
 --- !u!1 &1327253935
 GameObject:
   m_ObjectHideFlags: 0

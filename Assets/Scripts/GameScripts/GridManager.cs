@@ -314,6 +314,7 @@ public class GridManager : MonoBehaviour
         }
         
         UpdatePlayerPosition(movePosition);
+        GameEventDispatcher.DispatchPlayerTookStepEvent();
         InteractWithTile();
     }
 

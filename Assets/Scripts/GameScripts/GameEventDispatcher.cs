@@ -10,6 +10,10 @@ public static class GameEventDispatcher
     public delegate void PlayerReachedStarEvent(int index);
     public static event PlayerReachedStarEvent PlayerReachedStar;
 
+    public delegate void PlayerTookStepEvent();
+
+    public static event PlayerTookStepEvent PlayerTookStep;
+
     public static void DispatchPlayerAtExitEvent()
     {
         PlayerAtExit?.Invoke();
@@ -23,5 +27,10 @@ public static class GameEventDispatcher
     public static void DispatchPlayerReachedStarEvent(int index)
     {
         PlayerReachedStar?.Invoke(index);
+    }
+
+    public static void DispatchPlayerTookStepEvent()
+    {
+        PlayerTookStep?.Invoke();
     }
 }
