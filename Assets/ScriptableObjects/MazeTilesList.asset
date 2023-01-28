@@ -25,3 +25,5 @@ MonoBehaviour:
     Tile: {fileID: 11400000, guid: f7b8f39cd02018d4d923006c435911fe, type: 2}
   - Name: Lava
     Tile: {fileID: 11400000, guid: b06c20139ceb3444cae038628542380b, type: 2}
+  - Name: Star
+    Tile: {fileID: 11400000, guid: dbb6117f5b8cca94db5e1103cb107e76, type: 2}
